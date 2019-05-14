@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?> 
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<mapper namespace="com.qhit.webFun.dao.IWebFunDao"> 
+	<!-- 自定义结果集 --> 
+	<resultMap id="BaseResultMap" type="com.qhit.webFun.pojo.WebFun"> 
+		<id property="fid" column="fid" javaType="java.lang.Integer"></id> 
+		<result property="fname" column="fname" javaType="java.lang.String"></result> 
+		<result property="url" column="url" javaType="java.lang.String"></result> 
+		<result property="sort" column="sort" javaType="java.lang.Integer"></result> 
+		<result property="start" column="start" javaType="java.lang.Integer"></result> 
+	</resultMap> 
+
+	<!-- 在各种标签中，id属性必须与接口中的方法名一样，id的值必须是唯一的，parameterType指查询时使用的参数类型， 
+	resultType属性指明查询返回的结果集类型    --> 
+ 
+	<sql id="Base_Column_List" > 
+		fid,fname,url,sort,start 
+	</sql> 
+	<select id="findById" resultMap="BaseResultMap" parameterType="java.lang.Integer" > 
+		select 
+		<include refid="Base_Column_List" /> 
+		from web_fun 
+		where fid = #{fid} 
+	</select> 
+	<delete id="delete" parameterType="java.lang.Integer" > 
+		delete from web_fun 
+		where fid = #{fid} 
+	</delete> 
+	<insert id="insert" parameterType="com.qhit.webFun.pojo.WebFun" > 
+		insert into web_fun(fname,url,sort,start) 
+		values (#{fname},#{url},#{sort},#{start}) 
+	</insert> 
+	<update id="updateSelective" parameterType="com.qhit.webFun.pojo.WebFun" > 
+		update web_fun 
+		<set > 
+			<if test="fname != null and fname!='' " > 
+				fname = #{fname}, 
+			</if> 
+			<if test="url != null and url!='' " > 
+				url = #{url}, 
+			</if> 
+			<if test="sort != null and sort!='' " > 
+				sort = #{sort}, 
+			</if> 
+			<if test="start != null and start!='' " > 
+				start = #{start}, 
+			</if> 
+		</set> 
+		where fid = #{fid} 
+	</update> 
+	<update id="update" parameterType="com.qhit.webFun.pojo.WebFun" > 
+		update web_fun 
+		set  fname = #{fname}, url = #{url}, sort = #{sort}, start = #{start} 
+		where fid = #{fid} 
+	</update> 
+	<select id="findAll" resultMap="BaseResultMap" > 
+		select * from web_fun wf order by wf.sort ASC
+	</select> 
+	<select id="findByFname" resultMap="BaseResultMap" parameterType="java.lang.String" > 
+		select 
+		<include refid="Base_Column_List" /> 
+		from web_fun 
+		where fname = #{fname} 
+	</select> 
+	<select id="findByUrl" resultMap="BaseResultMap" parameterType="java.lang.String" > 
+		select 
+		<include refid="Base_Column_List" /> 
+		from web_fun 
+		where url = #{url} 
+	</select> 
+	<select id="findBySort" resultMap="BaseResultMap" parameterType="java.lang.Integer" > 
+		select 
+		<include refid="Base_Column_List" /> 
+		from web_fun 
+		where sort = #{sort} 
+	</select> 
+	<select id="findByStart" resultMap="BaseResultMap" parameterType="java.lang.Integer" > 
+		select 
+		<include refid="Base_Column_List" /> 
+		from web_fun 
+		where start = #{start} 
+	</select> 
+	<delete id="deleteBatch" parameterType="java.util.Arrays"> 
+		delete from web_fun where fid in 
+		<foreach collection="array" item="id" open="(" close=")" separator=","> 
+			#{id} 
+		</foreach> 
+	</delete> 
+	<select id="search" parameterType="com.qhit.webFun.pojo.WebFun" resultMap="BaseResultMap">
+		select * from web_fun wf
+		<where > 
+			<if test="fname != null and fname!='' " > 
+				 and fname = #{fname} 
+			</if> 
+			<if test="url != null and url!='' " > 
+				 and url = #{url} 
+			</if> 
+			<if test="sort != null and sort!='' " > 
+				 and sort = #{sort} 
+			</if> 
+			<if test="start != null and start!='' " > 
+				 and start = #{start} 
+			</if> 
+		</where>
+		order by wf.sort ASC
+	</select> 
+</mapper> 

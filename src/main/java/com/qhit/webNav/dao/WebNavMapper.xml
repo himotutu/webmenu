@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?> 
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<mapper namespace="com.qhit.webNav.dao.IWebNavDao"> 
+	<!-- 自定义结果集 --> 
+	<resultMap id="BaseResultMap" type="com.qhit.webNav.pojo.WebNav"> 
+		<id property="nid" column="nid" javaType="java.lang.Integer"></id> 
+		<result property="nname" column="nname" javaType="java.lang.String"></result> 
+		<result property="url" column="url" javaType="java.lang.String"></result> 
+		<result property="target" column="target" javaType="java.lang.Integer"></result> 
+		<result property="type" column="type" javaType="java.lang.Integer"></result> 
+		<result property="sort" column="sort" javaType="java.lang.Integer"></result> 
+		<result property="start" column="start" javaType="java.lang.Integer"></result> 
+	</resultMap> 
+
+	<!-- 在各种标签中，id属性必须与接口中的方法名一样，id的值必须是唯一的，parameterType指查询时使用的参数类型， 
+	resultType属性指明查询返回的结果集类型    --> 
+ 
+	<sql id="Base_Column_List" > 
+		nid,nname,url,target,type,sort,start 
+	</sql> 
+	<select id="findById" resultMap="BaseResultMap" parameterType="java.lang.Integer" > 
+		select 
+		<include refid="Base_Column_List" /> 
+		from web_nav 
+		where nid = #{nid} 
+	</select> 
+	<delete id="delete" parameterType="java.lang.Integer" > 
+		delete from web_nav 
+		where nid = #{nid} 
+	</delete> 
+	<insert id="insert" parameterType="com.qhit.webNav.pojo.WebNav" > 
+		insert into web_nav(nname,url,target,type,sort,start) 
+		values (#{nname},#{url},#{target},#{type},#{sort},#{start}) 
+	</insert> 
+	<update id="updateSelective" parameterType="com.qhit.webNav.pojo.WebNav" > 
+		update web_nav 
+		<set > 
+			<if test="nname != null and nname!='' " > 
+				nname = #{nname}, 
+			</if> 
+			<if test="url != null and url!='' " > 
+				url = #{url}, 
+			</if> 
+			<if test="target != null and target!='' " > 
+				target = #{target}, 
+			</if> 
+			<if test="type != null and type!='' " > 
+				type = #{type}, 
+			</if> 
+			<if test="sort != null and sort!='' " > 
+				sort = #{sort}, 
+			</if> 
+			<if test="start != null and start!='' " > 
+				start = #{start}, 
+			</if> 
+		</set> 
+		where nid = #{nid} 
+	</update> 
+	<update id="update" parameterType="com.qhit.webNav.pojo.WebNav" > 
+		update web_nav 
+		set  nname = #{nname}, url = #{url}, target = #{target}, type = #{type}, sort = #{sort}, start = #{start} 
+		where nid = #{nid} 
+	</update> 
+	<select id="findAll" resultMap="BaseResultMap" > 
+		SELECT * FROM web_nav wn ORDER BY wn.sort ASC
+	</select> 
+	<select id="findByNname" resultMap="BaseResultMap" parameterType="java.lang.String" > 
+		select 
+		<include refid="Base_Column_List" /> 
+		from web_nav 
+		where nname = #{nname} 
+	</select> 
+	<select id="findByUrl" resultMap="BaseResultMap" parameterType="java.lang.String" > 
+		select 
+		<include refid="Base_Column_List" /> 
+		from web_nav 
+		where url = #{url} 
+	</select> 
+	<select id="findByTarget" resultMap="BaseResultMap" parameterType="java.lang.Integer" > 
+		select 
+		<include refid="Base_Column_List" /> 
+		from web_nav 
+		where target = #{target} 
+	</select> 
+	<select id="findByType" resultMap="BaseResultMap" parameterType="java.lang.Integer" > 
+		select 
+		<include refid="Base_Column_List" /> 
+		from web_nav 
+		where type = #{type} 
+	</select> 
+	<select id="findBySort" resultMap="BaseResultMap" parameterType="java.lang.Integer" > 
+		select 
+		<include refid="Base_Column_List" /> 
+		from web_nav 
+		where sort = #{sort} 
+	</select> 
+	<select id="findByStart" resultMap="BaseResultMap" parameterType="java.lang.Integer" > 
+		select 
+		<include refid="Base_Column_List" /> 
+		from web_nav 
+		where start = #{start} 
+	</select> 
+	<delete id="deleteBatch" parameterType="java.util.Arrays"> 
+		delete from web_nav where nid in 
+		<foreach collection="array" item="id" open="(" close=")" separator=","> 
+			#{id} 
+		</foreach> 
+	</delete> 
+	<select id="search" parameterType="com.qhit.webNav.pojo.WebNav" resultMap="BaseResultMap">
+		SELECT * FROM web_nav wn
+		<where > 
+			<if test="nname != null and nname!='' " > 
+				 and nname = #{nname} 
+			</if> 
+			<if test="url != null and url!='' " > 
+				 and url = #{url} 
+			</if> 
+			<if test="target != null and target!='' " > 
+				 and target = #{target} 
+			</if> 
+			<if test="type != null and type!='' " > 
+				 and type = #{type} 
+			</if> 
+			<if test="sort != null and sort!='' " > 
+				 and sort = #{sort} 
+			</if> 
+			<if test="start != null and start!='' " > 
+				 and start = #{start} 
+			</if> 
+		</where>
+		ORDER BY wn.sort ASC
+	</select> 
+</mapper> 
